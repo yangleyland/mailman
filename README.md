@@ -1,6 +1,6 @@
 # Mailman
 
-A CLI clone of Postman for managing HTTP requests.
+A CLI alternative of Postman for managing HTTP requests.
 
 ## Features
 
