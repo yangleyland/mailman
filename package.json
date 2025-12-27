@@ -1,0 +1,33 @@
+{
+  "name": "mailman-cli",
+  "version": "1.0.0",
+  "description": "A CLI clone of Postman for managing HTTP requests",
+  "main": "dist/index.js",
+  "bin": {
+    "mailman": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "cli",
+    "http",
+    "api",
+    "postman"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/prompts": "^2.4.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.2"
+  }
+}
