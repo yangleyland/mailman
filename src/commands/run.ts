@@ -23,14 +23,17 @@ async function selectRequest(): Promise<string | null> {
     value: req.filepath,
   }));
 
-  const response = await prompts({
+  const response = await prompts<"filepath">({
     type: "select",
     name: "filepath",
     message: "Select a request to run",
     choices,
   });
 
-  return response.filepath || null;
+  if (typeof response.filepath === "string") {
+    return response.filepath;
+  }
+  return null;
 }
 
 export async function runCommand(

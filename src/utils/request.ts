@@ -1,8 +1,26 @@
 import fs from "fs";
 import path from "path";
-import { RequestFile, ResolvedRequest, Environment } from "../types";
+import { RequestFile, ResolvedRequest, Environment, HttpMethod } from "../types";
 import { interpolateObject } from "./variables";
 import { getConfigDir } from "./config";
+
+const HTTP_METHODS: HttpMethod[] = ["GET", "POST", "PUT", "PATCH", "DELETE"];
+
+function isHttpMethod(value: unknown): value is HttpMethod {
+  return typeof value === "string" && HTTP_METHODS.includes(value as HttpMethod);
+}
+
+function isRequestFile(value: unknown): value is RequestFile {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const obj = value as Record<string, unknown>;
+  return (
+    typeof obj.name === "string" &&
+    isHttpMethod(obj.method) &&
+    typeof obj.url === "string"
+  );
+}
 
 export function loadRequest(filepath: string): RequestFile {
   const absolutePath = path.isAbsolute(filepath)
@@ -14,7 +32,11 @@ export function loadRequest(filepath: string): RequestFile {
   }
 
   const content = fs.readFileSync(absolutePath, "utf-8");
-  return JSON.parse(content);
+  const parsed: unknown = JSON.parse(content);
+  if (isRequestFile(parsed)) {
+    return parsed;
+  }
+  throw new Error(`Invalid request file format: ${absolutePath}`);
 }
 
 export function resolveRequest(
@@ -42,7 +64,7 @@ export function listRequests(): Array<{ name: string; filepath: string }> {
 
   const results: Array<{ name: string; filepath: string }> = [];
 
-  function scanDir(dir: string) {
+  function scanDir(dir: string): void {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
 
     for (const entry of entries) {

@@ -47,7 +47,7 @@ const SAMPLE_REQUESTS: Array<{ filename: string; content: RequestFile }> = [
   },
 ];
 
-export async function initCommand(): Promise<void> {
+export function initCommand(): void {
   const cwd = process.cwd();
   const configPath = path.join(cwd, "config.json");
   const requestsDir = path.join(cwd, "requests");

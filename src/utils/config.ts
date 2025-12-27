@@ -23,6 +23,18 @@ export function findConfigPath(startDir: string = process.cwd()): string | null 
   return null;
 }
 
+function isConfig(value: unknown): value is Config {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const obj = value as Record<string, unknown>;
+  return (
+    typeof obj.defaultEnvironment === "string" &&
+    typeof obj.environments === "object" &&
+    obj.environments !== null
+  );
+}
+
 export function loadConfig(): Config | null {
   const configPath = findConfigPath();
   if (!configPath) {
@@ -30,7 +42,11 @@ export function loadConfig(): Config | null {
   }
 
   const content = fs.readFileSync(configPath, "utf-8");
-  return JSON.parse(content);
+  const parsed: unknown = JSON.parse(content);
+  if (isConfig(parsed)) {
+    return parsed;
+  }
+  return null;
 }
 
 export function getEnvironment(config: Config, envName?: string): Environment {

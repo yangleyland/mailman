@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { listRequests } from "../utils/request";
 import { loadConfig } from "../utils/config";
 
-export async function listCommand(): Promise<void> {
+export function listCommand(): void {
   const config = loadConfig();
 
   if (!config) {
