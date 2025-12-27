@@ -6,10 +6,7 @@ interface ViewOptions {
   env?: string;
 }
 
-export function viewCommand(
-  filepath: string,
-  options: ViewOptions
-): void {
+export function viewCommand(filepath: string, options: ViewOptions): void {
   const config = loadConfig();
 
   if (!config) {

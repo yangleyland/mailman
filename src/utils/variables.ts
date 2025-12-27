@@ -1,12 +1,15 @@
 import { Environment } from "../types";
 
 export function interpolate(template: string, variables: Environment): string {
-  return template.replace(/\{\{(\w+)\}\}/g, (match: string, key: string): string => {
-    if (Object.prototype.hasOwnProperty.call(variables, key)) {
-      return variables[key];
-    }
-    return match;
-  });
+  return template.replace(
+    /\{\{(\w+)\}\}/g,
+    (match: string, key: string): string => {
+      if (Object.prototype.hasOwnProperty.call(variables, key)) {
+        return variables[key];
+      }
+      return match;
+    },
+  );
 }
 
 export function interpolateObject<T>(obj: T, variables: Environment): T {
@@ -16,7 +19,9 @@ export function interpolateObject<T>(obj: T, variables: Environment): T {
   }
 
   if (Array.isArray(obj)) {
-    const mapped: unknown[] = obj.map((item: unknown) => interpolateObject(item, variables));
+    const mapped: unknown[] = obj.map((item: unknown) =>
+      interpolateObject(item, variables),
+    );
     return mapped as unknown as T;
   }
 

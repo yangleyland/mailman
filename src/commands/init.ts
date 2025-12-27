@@ -67,7 +67,9 @@ export function initCommand(): void {
   for (const sample of SAMPLE_REQUESTS) {
     const filepath = path.join(requestsDir, sample.filename);
     if (fs.existsSync(filepath)) {
-      console.log(chalk.yellow(`${sample.filename} already exists, skipping...`));
+      console.log(
+        chalk.yellow(`${sample.filename} already exists, skipping...`),
+      );
     } else {
       fs.writeFileSync(filepath, JSON.stringify(sample.content, null, 2));
       console.log(chalk.green(`Created requests/${sample.filename}`));

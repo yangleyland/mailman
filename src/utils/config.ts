@@ -4,7 +4,9 @@ import { Config, Environment } from "../types";
 
 const CONFIG_FILE = "config.json";
 
-export function findConfigPath(startDir: string = process.cwd()): string | null {
+export function findConfigPath(
+  startDir: string = process.cwd(),
+): string | null {
   let currentDir = startDir;
 
   while (currentDir !== path.dirname(currentDir)) {
