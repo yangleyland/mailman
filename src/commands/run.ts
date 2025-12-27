@@ -7,6 +7,7 @@ import path from "path";
 
 interface RunOptions {
   env?: string;
+  var?: string[];
 }
 
 async function selectRequest(): Promise<string | null> {
@@ -38,7 +39,7 @@ async function selectRequest(): Promise<string | null> {
 
 export async function runCommand(
   filepath?: string,
-  options?: RunOptions
+  options?: RunOptions,
 ): Promise<void> {
   const config = loadConfig();
 
@@ -60,6 +61,11 @@ export async function runCommand(
   try {
     const request = loadRequest(targetPath);
     const environment = getEnvironment(config, options?.env);
+
+    for (const v of options?.var ?? []) {
+      const [key, ...rest] = v.split("=");
+      environment[key] = rest.join("=");
+    }
     const resolved = resolveRequest(request, environment);
 
     const envName = options?.env || config.defaultEnvironment;
@@ -83,10 +89,12 @@ export async function runCommand(
       response.status >= 200 && response.status < 300
         ? chalk.green
         : response.status >= 400
-        ? chalk.red
-        : chalk.yellow;
+          ? chalk.red
+          : chalk.yellow;
 
-    console.log(statusColor(`Status: ${response.status} ${response.statusText}`));
+    console.log(
+      statusColor(`Status: ${response.status} ${response.statusText}`),
+    );
     console.log(chalk.gray(`Time: ${duration}ms\n`));
 
     console.log(chalk.green("Response Headers:"));

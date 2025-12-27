@@ -33,6 +33,10 @@ program
   .command("run [filepath]")
   .description("Run a request (prompts for selection if no filepath given)")
   .option("-e, --env <environment>", "Environment to use")
+  .option(
+    "-v, --var <key=value...>",
+    "Set variables (can be used multiple times)",
+  )
   .action(runCommand);
 
 program.parse();

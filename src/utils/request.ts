@@ -1,13 +1,20 @@
 import fs from "fs";
 import path from "path";
-import { RequestFile, ResolvedRequest, Environment, HttpMethod } from "../types";
+import {
+  RequestFile,
+  ResolvedRequest,
+  Environment,
+  HttpMethod,
+} from "../types";
 import { interpolateObject } from "./variables";
 import { getConfigDir } from "./config";
 
 const HTTP_METHODS: HttpMethod[] = ["GET", "POST", "PUT", "PATCH", "DELETE"];
 
 function isHttpMethod(value: unknown): value is HttpMethod {
-  return typeof value === "string" && HTTP_METHODS.includes(value as HttpMethod);
+  return (
+    typeof value === "string" && HTTP_METHODS.includes(value as HttpMethod)
+  );
 }
 
 function isRequestFile(value: unknown): value is RequestFile {
@@ -41,7 +48,7 @@ export function loadRequest(filepath: string): RequestFile {
 
 export function resolveRequest(
   request: RequestFile,
-  variables: Environment
+  variables: Environment,
 ): ResolvedRequest {
   const interpolated = interpolateObject(request, variables);
 
