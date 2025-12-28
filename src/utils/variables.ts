@@ -1,6 +1,6 @@
-import { Environment } from "../types";
+import { Variables } from "../types";
 
-export function interpolate(template: string, variables: Environment): string {
+export function interpolate(template: string, variables: Variables): string {
   return template.replace(
     /\{\{(\w+)\}\}/g,
     (match: string, key: string): string => {
@@ -12,7 +12,7 @@ export function interpolate(template: string, variables: Environment): string {
   );
 }
 
-export function interpolateObject<T>(obj: T, variables: Environment): T {
+export function interpolateObject<T>(obj: T, variables: Variables): T {
   if (typeof obj === "string") {
     const interpolated: string = interpolate(obj, variables);
     return interpolated as unknown as T;

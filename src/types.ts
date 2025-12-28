@@ -9,13 +9,13 @@ export interface RequestFile {
   body?: unknown;
 }
 
-export interface Environment {
+export interface Variables {
   [key: string]: string;
 }
 
 export interface Config {
   defaultEnvironment: string;
-  environments: Record<string, Environment>;
+  environments: Record<string, Variables>;
 }
 
 export interface ResolvedRequest {

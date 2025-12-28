@@ -1,11 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {
-  RequestFile,
-  ResolvedRequest,
-  Environment,
-  HttpMethod,
-} from "../types";
+import { RequestFile, ResolvedRequest, Variables, HttpMethod } from "../types";
 import { interpolateObject } from "./variables";
 import { getConfigDir } from "./config";
 
@@ -48,7 +43,7 @@ export function loadRequest(filepath: string): RequestFile {
 
 export function resolveRequest(
   request: RequestFile,
-  variables: Environment,
+  variables: Variables,
 ): ResolvedRequest {
   const interpolated = interpolateObject(request, variables);
 

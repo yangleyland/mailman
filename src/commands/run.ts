@@ -2,8 +2,13 @@ import axios, { AxiosError } from "axios";
 import chalk from "chalk";
 import prompts from "prompts";
 import { loadRequest, resolveRequest, listRequests } from "../utils/request";
-import { loadConfig, getEnvironment, getConfigDir } from "../utils/config";
+import {
+  loadConfig,
+  getEnvironmentVariables,
+  getConfigDir,
+} from "../utils/config";
 import path from "path";
+import dotenv from "dotenv";
 
 interface RunOptions {
   env?: string;
@@ -60,18 +65,24 @@ export async function runCommand(
 
   try {
     const request = loadRequest(targetPath);
-    const environment = getEnvironment(config, options?.env);
+    const variables = getEnvironmentVariables(config, options?.env);
+    const envs = dotenv.config().parsed;
 
     if (request?.defaultValues) {
       for (const [key, value] of Object.entries(request?.defaultValues)) {
-        environment[key] = value;
+        variables[key] = value;
+      }
+    }
+    if (envs) {
+      for (const [key, value] of Object.entries(envs)) {
+        variables[key] = value;
       }
     }
     for (const v of options?.var ?? []) {
       const [key, ...rest] = v.split("=");
-      environment[key] = rest.join("=");
+      variables[key] = rest.join("=");
     }
-    const resolved = resolveRequest(request, environment);
+    const resolved = resolveRequest(request, variables);
 
     const envName = options?.env || config.defaultEnvironment;
     console.log(chalk.cyan(`\nRunning: ${resolved.name}`));

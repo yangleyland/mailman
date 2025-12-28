@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { Config, Environment } from "../types";
+import { Config, Variables } from "../types";
 
 const CONFIG_FILE = "config.json";
 
@@ -51,15 +51,18 @@ export function loadConfig(): Config | null {
   return null;
 }
 
-export function getEnvironment(config: Config, envName?: string): Environment {
-  const targetEnv = envName || config.defaultEnvironment;
-  const env = config.environments[targetEnv];
+export function getEnvironmentVariables(
+  config: Config,
+  envName?: string,
+): Variables {
+  const targetEnvName = envName || config.defaultEnvironment;
+  const envVariables = config.environments[targetEnvName];
 
-  if (!env) {
-    throw new Error(`Environment "${targetEnv}" not found in config`);
+  if (!envVariables) {
+    throw new Error(`Environment "${targetEnvName}" not found in config`);
   }
 
-  return env;
+  return envVariables;
 }
 
 export function getConfigDir(): string {
