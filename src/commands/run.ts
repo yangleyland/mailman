@@ -62,6 +62,11 @@ export async function runCommand(
     const request = loadRequest(targetPath);
     const environment = getEnvironment(config, options?.env);
 
+    if (request?.defaultValues) {
+      for (const [key, value] of Object.entries(request?.defaultValues)) {
+        environment[key] = value;
+      }
+    }
     for (const v of options?.var ?? []) {
       const [key, ...rest] = v.split("=");
       environment[key] = rest.join("=");

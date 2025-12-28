@@ -5,6 +5,7 @@ export interface RequestFile {
   method: HttpMethod;
   url: string;
   headers?: Record<string, string>;
+  defaultValues?: Record<string, string>;
   body?: unknown;
 }
 
