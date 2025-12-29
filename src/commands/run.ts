@@ -25,16 +25,18 @@ async function selectRequest(): Promise<string | null> {
     return null;
   }
 
-  const choices = requests.map((req) => ({
+  const requestFiles = requests.map((req) => ({
     title: req.name,
     description: req.filepath,
     value: req.filepath,
   }));
-  choices.push({
-    title: "Run new request",
-    description: "Run new request",
-    value: "Run new request",
-  });
+  const choices = [
+    {
+      title: "Run new request",
+      description: "Run new request",
+      value: "Run new request",
+    },
+  ].concat(requestFiles);
 
   const response = await prompts({
     type: "select",
