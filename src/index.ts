@@ -7,6 +7,7 @@ import { listCommand } from "./commands/list";
 import { viewCommand } from "./commands/view";
 import { runCommand } from "./commands/run";
 import { newCommand } from "./commands/new";
+import { setPathCommand, showPathCommand } from "./commands/set-path";
 
 const program = new Command();
 
@@ -45,5 +46,16 @@ program
     "Set variables (can be used multiple times)",
   )
   .action(runCommand);
+
+program
+  .command("set-path [path]")
+  .description("Set the default project path for mailman")
+  .option("-c, --clear", "Clear the default project path")
+  .action(setPathCommand);
+
+program
+  .command("show-path")
+  .description("Show the current default project path")
+  .action(showPathCommand);
 
 program.parse();

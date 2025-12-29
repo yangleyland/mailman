@@ -27,7 +27,7 @@ function isRequestFile(value: unknown): value is RequestFile {
 export function loadRequest(filepath: string): RequestFile {
   const absolutePath = path.isAbsolute(filepath)
     ? filepath
-    : path.join(process.cwd(), filepath);
+    : path.join(getConfigDir(), filepath);
 
   if (!fs.existsSync(absolutePath)) {
     throw new Error(`Request file not found: ${absolutePath}`);

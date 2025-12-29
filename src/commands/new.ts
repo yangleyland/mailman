@@ -21,17 +21,16 @@ export async function newCommand(): Promise<void> {
     return;
   }
 
-  const relativePath = path.relative(getConfigDir(), directory);
+  const configDir = getConfigDir();
+  const relativePath = path.relative(configDir, directory);
   console.log(chalk.cyan(`\nSelected directory: ${relativePath}/`));
 
-  // Build out requuest object
   const { request } = await promptNewRequest(config, false);
   const fileName = await getFileNameFromUser();
-  const cwd = process.cwd();
   if (!fileName) {
     console.log(chalk.red("No filename provided"));
     process.exit(1);
   }
-  const filepath = path.join(cwd, relativePath, fileName);
+  const filepath = path.join(configDir, relativePath, fileName);
   fs.writeFileSync(filepath, JSON.stringify(request, null, 2));
 }

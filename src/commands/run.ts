@@ -92,12 +92,12 @@ export async function runCommand(
       request = loadRequest(targetPath);
     }
     const { variables, cookies } = getEnvironmentObject(config, options?.env);
-    let path = ".env";
+    let envFile = ".env";
     if (options?.env && config.defaultEnvironment !== options?.env) {
-      path += ".";
-      path += options?.env;
+      envFile += `.${options.env}`;
     }
-    const envs = dotenv.config({ path }).parsed;
+    const envPath = path.join(getConfigDir(), envFile);
+    const envs = dotenv.config({ path: envPath }).parsed;
     if (cookies && request.cookies) {
       request = (await resolveCookieHeaders(request, cookies)) || request;
     }

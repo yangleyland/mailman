@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Config, Environment } from "../types";
+import { getDefaultProjectPath } from "./globalConfig";
 
 const CONFIG_FILE = "config.json";
 
@@ -20,6 +21,14 @@ export function findConfigPath(
   const rootConfig = path.join(currentDir, CONFIG_FILE);
   if (fs.existsSync(rootConfig)) {
     return rootConfig;
+  }
+
+  const defaultPath = getDefaultProjectPath();
+  if (defaultPath) {
+    const defaultConfigPath = path.join(defaultPath, CONFIG_FILE);
+    if (fs.existsSync(defaultConfigPath)) {
+      return defaultConfigPath;
+    }
   }
 
   return null;
