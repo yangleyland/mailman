@@ -66,7 +66,12 @@ export async function runCommand(
   try {
     const request = loadRequest(targetPath);
     const variables = getEnvironmentVariables(config, options?.env);
-    const envs = dotenv.config().parsed;
+    let path = ".env";
+    if (options?.env && config.defaultEnvironment !== options?.env) {
+      path += ".";
+      path += options?.env;
+    }
+    const envs = dotenv.config({ path }).parsed;
 
     if (request?.defaultValues) {
       for (const [key, value] of Object.entries(request?.defaultValues)) {
