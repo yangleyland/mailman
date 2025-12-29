@@ -85,7 +85,7 @@ export async function runCommand(
 
     let request: RequestFile;
     if (runNewRequest) {
-      const newReqRes = await promptNewRequest(config);
+      const newReqRes = await promptNewRequest(config, true);
       request = newReqRes.request;
     } else {
       request = loadRequest(targetPath);

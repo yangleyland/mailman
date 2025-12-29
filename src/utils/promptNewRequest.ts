@@ -3,7 +3,7 @@ import { validMethods } from "./constants";
 import prompts from "prompts";
 import { getBodyWithEditor } from "./getBodyWithEditor";
 
-async function getEnvironment(config: Config): Promise<string | null> {
+async function getEnvironment(config: Config): Promise<string | undefined> {
   // loop through config.environments
   const choices = [];
   for (const [key] of Object.entries(config.environments)) {
@@ -20,7 +20,7 @@ async function getEnvironment(config: Config): Promise<string | null> {
   if (typeof response.environment === "string") {
     return response.environment;
   }
-  return null;
+  return undefined;
 }
 function convertStringToMethodType(methodStr: string): methodStr is HttpMethod {
   return validMethods.includes(methodStr);
@@ -89,11 +89,14 @@ async function getHeaders(): Promise<Record<string, string> | undefined> {
   }
   return headerVals;
 }
-export async function promptNewRequest(config: Config): Promise<{
+export async function promptNewRequest(
+  config: Config,
+  checkEnv: boolean,
+): Promise<{
   request: RequestFile;
-  environment: string;
+  environment?: string;
 }> {
-  const environment = await getEnvironment(config);
+  const environment = checkEnv ? await getEnvironment(config) : undefined;
   const method = await getMethod();
   const url = await getRequestUrl();
   const headers = await getHeaders();
@@ -107,6 +110,6 @@ export async function promptNewRequest(config: Config): Promise<{
       headers,
       body,
     },
-    environment: environment ?? "dev",
+    environment,
   };
 }
