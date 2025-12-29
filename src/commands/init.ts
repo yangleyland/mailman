@@ -8,11 +8,11 @@ const SAMPLE_CONFIG: Config = {
   environments: {
     dev: {
       baseUrl: "http://localhost:3000",
-      apiKey: "dev-api-key",
+      exampleVariable: "dev-example-variable",
     },
     prod: {
       baseUrl: "https://api.example.com",
-      apiKey: "prod-api-key",
+      exampleVariable: "prod-example-variable",
     },
   },
 };
@@ -25,7 +25,7 @@ const SAMPLE_REQUESTS: Array<{ filename: string; content: RequestFile }> = [
       method: "GET",
       url: "{{baseUrl}}/users",
       headers: {
-        Authorization: "Bearer {{apiKey}}",
+        Authorization: "Bearer {{API_KEY}}",
       },
     },
   },
@@ -36,7 +36,7 @@ const SAMPLE_REQUESTS: Array<{ filename: string; content: RequestFile }> = [
       method: "POST",
       url: "{{baseUrl}}/users",
       headers: {
-        Authorization: "Bearer {{apiKey}}",
+        Authorization: "Bearer {{API_KEY}}",
         "Content-Type": "application/json",
       },
       body: {
