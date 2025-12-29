@@ -1,6 +1,7 @@
 import { RequestFile, HttpMethod, Config } from "../types";
 import { validMethods } from "./constants";
 import prompts from "prompts";
+import { getBodyWithEditor } from "./getBodyWithEditor";
 
 async function getEnvironment(config: Config): Promise<string | null> {
   // loop through config.environments
@@ -57,26 +58,54 @@ async function getRequestUrl(): Promise<string | null> {
   return null;
 }
 
-// function getHeaders(): Record<string, string> | undefined {
-//   return undefined;
-// }
+async function getHeaders(): Promise<Record<string, string> | undefined> {
+  const headerVals: Record<string, string> = {};
+  for (;;) {
+    const responseKey = await prompts({
+      type: "text",
+      name: "key",
+      message: "Enter header key or press q to finish",
+    });
+    if (typeof responseKey.key === "string" && responseKey.key === "q") {
+      break;
+    }
+    const responseValue = await prompts({
+      type: "text",
+      name: "value",
+      message: "Enter header value or press q to finish",
+    });
+    if (
+      typeof responseValue.value === "string" &&
+      responseValue.value === "q"
+    ) {
+      break;
+    }
+    if (
+      typeof responseKey.key === "string" &&
+      typeof responseValue.value === "string"
+    ) {
+      headerVals[responseKey.key] = responseValue.value;
+    }
+  }
+  return headerVals;
+}
 export async function promptNewRequest(config: Config): Promise<{
   request: RequestFile;
   environment: string;
 }> {
-  // Get environment
   const environment = await getEnvironment(config);
   const method = await getMethod();
   const url = await getRequestUrl();
-  // Get headers
-  // const headers = getHeaders();
-  // Get Body (edit with vim?)
+  const headers = await getHeaders();
+  const body = await getBodyWithEditor();
 
   return {
     request: {
       name: "Custom request",
       method: method ?? "GET",
       url: url ?? "",
+      headers,
+      body,
     },
     environment: environment ?? "dev",
   };
