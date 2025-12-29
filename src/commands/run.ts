@@ -11,6 +11,10 @@ import {
 } from "../utils/config";
 import path from "path";
 import dotenv from "dotenv";
+import {
+  findUnfilledVariablesInObject,
+  fillUnfilledVariables,
+} from "../utils/variables";
 
 interface RunOptions {
   env?: string;
@@ -108,7 +112,15 @@ export async function runCommand(
       const [key, ...rest] = v.split("=");
       variables[key] = rest.join("=");
     }
-    const resolved = resolveRequest(request, variables);
+    let resolved = resolveRequest(request, variables);
+    const unfilledVariables = findUnfilledVariablesInObject(resolved);
+    if (unfilledVariables.length > 0) {
+      const filledVariables = await fillUnfilledVariables(unfilledVariables);
+      for (const [key, value] of Object.entries(filledVariables)) {
+        variables[key] = value;
+      }
+      resolved = resolveRequest(request, variables);
+    }
 
     const envName = options?.env || config.defaultEnvironment;
     console.log(chalk.cyan(`\nRunning: ${resolved.name}`));
