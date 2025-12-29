@@ -6,6 +6,7 @@ import { initCommand } from "./commands/init";
 import { listCommand } from "./commands/list";
 import { viewCommand } from "./commands/view";
 import { runCommand } from "./commands/run";
+import { newCommand } from "./commands/new";
 
 const program = new Command();
 
@@ -23,6 +24,11 @@ program
   .command("list")
   .description("List all available requests")
   .action(listCommand);
+
+program
+  .command("new")
+  .description("Create a new request file")
+  .action(newCommand);
 
 program
   .command("view <filepath>")
