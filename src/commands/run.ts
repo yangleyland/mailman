@@ -6,7 +6,7 @@ import { promptNewRequest } from "../utils/promptNewRequest";
 import { RequestFile } from "../types";
 import {
   loadConfig,
-  getEnvironmentVariables,
+  getEnvironmentObject,
   getConfigDir,
 } from "../utils/config";
 import path from "path";
@@ -15,6 +15,7 @@ import {
   findUnfilledVariablesInObject,
   fillUnfilledVariables,
 } from "../utils/variables";
+import { resolveCookieHeaders } from "../utils/resolveCookieHeaders";
 
 interface RunOptions {
   env?: string;
@@ -90,13 +91,16 @@ export async function runCommand(
     } else {
       request = loadRequest(targetPath);
     }
-    const variables = getEnvironmentVariables(config, options?.env);
+    const { variables, cookies } = getEnvironmentObject(config, options?.env);
     let path = ".env";
     if (options?.env && config.defaultEnvironment !== options?.env) {
       path += ".";
       path += options?.env;
     }
     const envs = dotenv.config({ path }).parsed;
+    if (cookies && request.cookies) {
+      request = (await resolveCookieHeaders(request, cookies)) || request;
+    }
 
     if (request?.defaultValues) {
       for (const [key, value] of Object.entries(request?.defaultValues)) {

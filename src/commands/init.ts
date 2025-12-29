@@ -7,12 +7,16 @@ const SAMPLE_CONFIG: Config = {
   defaultEnvironment: "dev",
   environments: {
     dev: {
-      baseUrl: "http://localhost:3000",
-      exampleVariable: "dev-example-variable",
+      variables: {
+        baseUrl: "http://localhost:3000",
+        exampleVariable: "dev-example-variable",
+      },
     },
     prod: {
-      baseUrl: "https://api.example.com",
-      exampleVariable: "prod-example-variable",
+      variables: {
+        baseUrl: "https://api.example.com",
+        exampleVariable: "prod-example-variable",
+      },
     },
   },
 };

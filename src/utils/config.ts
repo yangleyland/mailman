@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { Config, Variables } from "../types";
+import { Config, Environment } from "../types";
 
 const CONFIG_FILE = "config.json";
 
@@ -51,10 +51,10 @@ export function loadConfig(): Config | null {
   return null;
 }
 
-export function getEnvironmentVariables(
+export function getEnvironmentObject(
   config: Config,
   envName?: string,
-): Variables {
+): Environment {
   const targetEnvName = envName || config.defaultEnvironment;
   const envVariables = config.environments[targetEnvName];
 

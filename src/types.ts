@@ -7,15 +7,24 @@ export interface RequestFile {
   headers?: Record<string, string>;
   defaultValues?: Record<string, string>;
   body?: unknown;
+  cookies?: boolean;
+}
+export interface CookieGroup {
+  name: string;
+  cookies: Record<string, string>;
 }
 
 export interface Variables {
   [key: string]: string;
 }
 
+export interface Environment {
+  variables: Variables;
+  cookies?: CookieGroup[];
+}
 export interface Config {
   defaultEnvironment: string;
-  environments: Record<string, Variables>;
+  environments: Record<string, Environment>;
 }
 
 export interface ResolvedRequest {

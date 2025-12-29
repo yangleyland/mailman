@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { loadRequest, resolveRequest } from "../utils/request";
-import { loadConfig, getEnvironmentVariables } from "../utils/config";
+import { loadConfig, getEnvironmentObject } from "../utils/config";
 
 interface ViewOptions {
   env?: string;
@@ -16,8 +16,8 @@ export function viewCommand(filepath: string, options: ViewOptions): void {
 
   try {
     const request = loadRequest(filepath);
-    const environment = getEnvironmentVariables(config, options.env);
-    const resolved = resolveRequest(request, environment);
+    const { variables } = getEnvironmentObject(config, options.env);
+    const resolved = resolveRequest(request, variables);
 
     const envName = options.env || config.defaultEnvironment;
     console.log(chalk.cyan(`\nRequest: ${resolved.name}`));

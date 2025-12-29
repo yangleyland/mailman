@@ -12,6 +12,7 @@ A CLI alternative to Postman for managing and executing HTTP requests from the t
 - Request previewing before execution
 - Bearer token authentication via headers
 - Editor support for request body input
+- Cookie support with named cookie groups
 
 ## Installation
 
@@ -69,10 +70,23 @@ Options:
   "defaultEnvironment": "dev",
   "environments": {
     "dev": {
-      "baseUrl": "http://localhost:3000"
+      "variables": {
+        "baseUrl": "http://localhost:3000"
+      },
+      "cookies": [
+        {
+          "name": "user-session",
+          "cookies": {
+            "session_id": "abc123",
+            "csrf_token": "xyz789"
+          }
+        }
+      ]
     },
     "prod": {
-      "baseUrl": "https://api.example.com"
+      "variables": {
+        "baseUrl": "https://api.example.com"
+      }
     }
   }
 }
@@ -91,11 +105,23 @@ Options:
   "defaultValues": {
     "limit": "10"
   },
-  "body": null
+  "body": null,
+  "cookies": true
 }
 ```
 
 Supported methods: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`
+
+### Cookies
+
+Set `"cookies": true` in a request file to enable cookie injection. Cookies are defined per environment in `config.json` as named cookie groups.
+
+When running a request with cookies enabled:
+
+- If a single cookie group is defined, it will be used automatically
+- If multiple cookie groups are defined, you will be prompted to select one
+
+The selected cookies are added to the request as a `Cookie` header.
 
 ### Environment files
 
