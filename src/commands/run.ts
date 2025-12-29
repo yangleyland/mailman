@@ -2,6 +2,8 @@ import axios, { AxiosError } from "axios";
 import chalk from "chalk";
 import prompts from "prompts";
 import { loadRequest, resolveRequest, listRequests } from "../utils/request";
+import { promptNewRequest } from "../utils/promptNewRequest";
+import { RequestFile } from "../types";
 import {
   loadConfig,
   getEnvironmentVariables,
@@ -28,8 +30,13 @@ async function selectRequest(): Promise<string | null> {
     description: req.filepath,
     value: req.filepath,
   }));
+  choices.push({
+    title: "Run new request",
+    description: "Run new request",
+    value: "Run new request",
+  });
 
-  const response = await prompts<"filepath">({
+  const response = await prompts({
     type: "select",
     name: "filepath",
     message: "Select a request to run",
@@ -55,16 +62,28 @@ export async function runCommand(
 
   let targetPath = filepath;
 
+  let runNewRequest = false;
   if (!targetPath) {
     const selected = await selectRequest();
     if (!selected) {
       return;
     }
+    if (selected === "Run new request") {
+      runNewRequest = true;
+    }
     targetPath = path.join(getConfigDir(), selected);
   }
 
   try {
-    const request = loadRequest(targetPath);
+    // If target path = "Run new request", fetch new request object
+
+    let request: RequestFile;
+    if (runNewRequest) {
+      const newReqRes = await promptNewRequest(config);
+      request = newReqRes.request;
+    } else {
+      request = loadRequest(targetPath);
+    }
     const variables = getEnvironmentVariables(config, options?.env);
     let path = ".env";
     if (options?.env && config.defaultEnvironment !== options?.env) {
